@@ -4,7 +4,6 @@ include "functions.php";
 include "database.php";
 include "constants.php";
 
-echo SERVER_PATH;
 $connection = new Database();
 $msg = "";
 if (isset($_POST['submit'])) {
@@ -20,7 +19,7 @@ if (isset($_POST['submit'])) {
     $meta_keyword = get_safe_senatize_value($_POST['meta_keyword']);
 
     $image = rand(111111111,9999999999).'_'.$_FILES['image']['name'];
-    move_uploaded_file($_FILES['image']['tmp_name'],'../media/product/'.$image);
+    move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
 
     $connection->insert("product", [
         "category_id" => $category_id, "product_name" => $product_name,
