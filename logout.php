@@ -1,6 +1,9 @@
 <?php
-session_start();
-session_unset();
-session_destroy();
-header("location:login.php");
+include 'functions.php';
+   session_start();
+   unset($_SESSION['USER_LOGGEDIN']);
+   unset($_SESSION['USER_NAME']);
+   unset($_SESSION['USER_EMAIL']);
+   header("location:index.php");
+   die();
 ?>

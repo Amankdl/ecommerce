@@ -1,91 +1,127 @@
 <?php
-include "header.php";
-include "database.php";
-include "functions.php";
-
-if(!isset($_SESSION['USER_LOGGEDIN']) || $_SESSION['USER_LOGGEDIN'] == ""){
-    header("location:login.php");
-}
+include 'header.php';
+include 'functions.php';
+if(isset($_GET['id'])){
+$msg = "";
 $connection = new Database();
-
-if(isset($_GET['type']) && $_GET['type'] != ""){
-    $type = get_safe_senatize_value($_GET['type']);
-    if($type === "status"){
-        $id = get_safe_senatize_value($_GET['id']);
-        $status;
-        $operation = get_safe_senatize_value($_GET['operation']);
-        if($operation === "active"){
-            $status = '1';
-        }else{
-            $status = '0';
-        }
-        $connection -> update("product",["status" => $status],"id=$id");
-    }
-
-    if($type === "delete"){
-        $id = get_safe_senatize_value($_GET['id']);
-        $connection->delete("product","id=$id");
-    }
+$id = get_safe_senatize_value($_GET['id']);
+if(!is_numeric($id)){
+    ?>
+    <script>
+    window.location.href = "index.php";
+    </script>
+    <?php
 }
-
-$connection -> get("SELECT p.*,c.category from product p INNER JOIN categories c ON p.category_id = c.id");
-$products = $connection -> getResult();
+$connection->get("select * from product p INNER JOIN categories c on p.category_id = c.id where c.status = 1 AND p.status = 1 AND p.id = $id");
+$product = $connection->getResult()[0];
+}
 ?>
-<div class="content pb-0">
-            <div class="orders">
-               <div class="row">
-                  <div class="col-xl-12">
-                     <div class="card">
-                        <div class="card-body">
-                           <h4 class="box-title display-4">Products </h4>
-                           <a class="btn btn-sm btn-primary mt-3" href="add_product.php">Add Product</a>
+
+<div class="body__overlay"></div>
+        <!-- Start Bradcaump area -->
+        <div class="ht__bradcaump__area" style="background: rgba(0, 0, 0, 0) url(images/bg/4.jpg) no-repeat scroll center center / cover ;">
+            <div class="ht__bradcaump__wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="bradcaump__inner">
+                                <nav class="bradcaump-inner">
+                                  <a class="breadcrumb-item" href="index.html">Home</a>
+                                  <span class="brd-separetor"><i class="zmdi zmdi-chevron-right"></i></span>
+                                  <a class="breadcrumb-item" href="categories.php?id=<?php echo $product['category_id'].'">'.$product['category'] ?></a>
+                                  <span class="brd-separetor"><i class="zmdi zmdi-chevron-right"></i></span>
+                                  <span class="breadcrumb-item active">ean shirt</span>
+                                </nav>
+                            </div>
                         </div>
-                        <div class="card-body--">
-                           <div class="table-stats order-table ov-h">
-                              <table class="table ">
-                                 <thead>
-                                    <tr>
-                                       <th class="serial">S.No</th>
-                                       <th>ID</th>
-                                       <th>Category</th>
-                                       <th>Name</th>
-                                       <th>MRP</th>
-                                       <th>Selling price</th>
-                                       <th>Qty</th>                                       
-                                       <th>Action</th>
-                                    </tr>
-                                 </thead>
-                                 <tbody>
-                                     <?php
-                                     $serial_num = 1;
-                                     foreach($products as $product){                                         
-                                         echo '<tr>
-                                            <td class="serial">'. $serial_num++ .'</td>                                       
-                                            <td> '.$product['id'].' </td>
-                                            <td> '.$product['category'].' </td>
-                                            <td> '.$product['product_name'].' </td>
-                                            <td> '.$product['mrp'].' </td>
-                                            <td> '.$product['selling_price'].' </td>
-                                            <td> '.$product['qty'].' </td>
-                                            <td> ';
-                                            if($product['status'] == 1){
-                                                echo "<a href='?type=status&operation=deactive&id=".$product['id']."'><span class=\"badge badge-success\">Active</span> &nbsp</a>";
-                                            }else{
-                                                echo "<a href='?type=status&operation=active&id=".$product['id']."'><span class=\"badge badge-danger\">Deactive</span> &nbsp</a>";
-                                            }
-                                            echo "
-                                            <a href='manage_product.php?id=".$product['id']."'><span class=\"badge badge-primary\">Edit</span>&nbsp</a>
-                                            <a href='?type=delete&id=".$product['id']."'><span class=\"badge badge-secondary\">Delete</span></a></td></tr>";
-                                     }
-                                    ?>                                    
-                                 </tbody>
-                              </table>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+                    </div>
+                </div>
             </div>
-		  </div>
-         <div class="clearfix"></div>
-<?php include "footer.php" ?>
+        </div>
+        <!-- End Bradcaump area -->
+        <!-- Start Product Details Area -->
+        <section class="htc__product__details bg__white ptb--100">
+            <!-- Start Product Details Top -->
+            <div class="htc__product__details__top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5 col-lg-5 col-sm-12 col-xs-12">
+                            <div class="htc__product__details__tab__content">
+                                <!-- Start Product Big Images -->
+                                <div class="product__big__images">
+                                    <div class="portfolio-full-image tab-content">
+                                        <div role="tabpanel" class="tab-pane fade in active" id="img-tab-1">
+                                            <img src="<?php echo IMAGE_PATH . $product['image'] ?>" alt="full-image">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Product Big Images -->                                
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-lg-7 col-sm-12 col-xs-12 smt-40 xmt-40">
+                            <div class="ht__product__dtl">
+                                <h2><?php echo $product['product_name'] ?></h2>
+                                <ul  class="pro__prize">
+                                    <li class="old__prize"><?php echo $product['mrp'] ?></li>
+                                    <li><?php echo $product['selling_price'] ?></li>
+                                </ul>
+                                <p class="pro__info"><?php echo $product['short_desc'] ?></p>
+                                <div class="ht__pro__desc">
+                                    <div class="sin__desc">
+                                        <p><span>Availability:</span> In Stock</p>
+                                    </div>
+                                    <div class="sin__desc align--left">
+                                        <p><span>Categories:</span></p>
+                                        <ul class="pro__cat__list">
+                                            <li><a href="categories.php?id=<?php echo $product['category_id'].'">'.$product['category'] ?></a></li>
+                                        </ul>
+                                    </div> 
+                                    <div>
+                                        <p>Quantity</p>
+                                        <select class="qty_option" id="qty">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                        </select>
+                                    </div>
+                                <div class="cr__btn mt-25">
+                                    <a href="javascript:void(0)" onclick="manage_cart(<?php echo $id ?>, 'add')">Add to cart</a>
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Product Details Top -->
+        </section>
+        <!-- End Product Details Area -->
+        <!-- Start Product Description -->
+        <section class="htc__produc__decription bg__white">
+            <div class="container">                
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="ht__pro__details__content">
+                            <!-- Start Single Content -->
+                            <div role="tabpanel" id="description" class="pro__single__content tab-pane fade in active">
+                                <div class="pro__tab__content__inner">
+                                    <h4 class="ht__pro__title">Description</h4>
+                                    <p><?php echo $product['description'] ?></p>
+                                </div>
+                            </div>
+                            <!-- End Single Content -->
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<?php include 'footer.php' ?>

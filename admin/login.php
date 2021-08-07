@@ -9,8 +9,8 @@ if(isset($_POST['submit'])){
    $password = get_safe_senatize_value($_POST['password']);
    $connection->select("admin_users","*","user_name = '$username' and password='$password'");
    if(count($connection->getResult()) == 1){
-      $_SESSION['USER_LOGGEDIN'] = 'yes';
-      $_SESSION['USERNAME'] = $username;
+      $_SESSION['ADMIN_USER_LOGGEDIN'] = 'yes';
+      $_SESSION['ADMIN_USERNAME'] = $username;
       header('location:categories.php');
    }else{
       $msg = "Please enter valid credentials.";

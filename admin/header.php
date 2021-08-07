@@ -1,6 +1,6 @@
 <?php
 session_start();
-$admin_name = strtoupper($_SESSION['USERNAME']);
+$admin_name = strtoupper($_SESSION['ADMIN_USERNAME']);
 echo '<!doctype html>
 <html class="no-js" lang="">
    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />

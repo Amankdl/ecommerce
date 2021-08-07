@@ -3,7 +3,7 @@ include "header.php";
 include "database.php";
 include "functions.php";
 
-if(!isset($_SESSION['USER_LOGGEDIN']) || $_SESSION['USER_LOGGEDIN'] == ""){
+if(!isset($_SESSION['ADMIN_USER_LOGGEDIN']) || $_SESSION['ADMIN_USER_LOGGEDIN'] == ""){
     header("location:login.php");
 }
 $connection = new Database();
