@@ -5,6 +5,7 @@ include "functions.php";
 
 if(!isset($_SESSION['ADMIN_USER_LOGGEDIN']) || $_SESSION['ADMIN_USER_LOGGEDIN'] == ""){
     header("location:login.php");
+    die();
 }
 $connection = new Database();
 

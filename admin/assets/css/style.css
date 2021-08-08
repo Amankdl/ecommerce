@@ -3329,3 +3329,8 @@ footer.site-footer .footer-inner a {
 .mt-150{
 	margin-top:150px;
 }
+
+.status-select{
+    padding: 0.8em;
+    outline: none;
+}

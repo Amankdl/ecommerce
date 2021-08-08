@@ -31,8 +31,8 @@ echo '<!doctype html>
                   <li class="menu-item-has-children dropdown">
                      <a href="product.php" > Product Master</a>
                   </li>
-				  <li class="menu-item-has-children dropdown">
-                     <a href="#" > Order Master</a>
+		  <li class="menu-item-has-children dropdown">
+                     <a href="order_master.php" > Order Master</a>
                   </li>
                   <li class="menu-item-has-children dropdown">
                      <a href="users.php" > User Master</a>
