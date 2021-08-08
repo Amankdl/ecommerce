@@ -3593,3 +3593,10 @@ ul.htc__instagram__posts.owl-carousel li img {
 .text-large{
     font-size: 2.5rem !important;
 }
+
+.failed-transaction{
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

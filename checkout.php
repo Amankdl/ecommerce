@@ -8,8 +8,8 @@ if (!isset($_SESSION['cart']) || count($_SESSION['cart']) == 0) {
     <script>
         window.location.href = "index.php";
     </script>
-<?php
-} else {    
+    <?php
+} else {
     $cart_products = $_SESSION['cart'];
     $product_keys = array_keys($cart_products);
     if (count($product_keys) > 0) {
@@ -36,34 +36,116 @@ if (isset($_POST['submit'])) {
     $payment_status = $payment_type === "cod" ? "success" : "pending";
     $order_status = 1;
 
-
+    $txnid = substr(hash('sha256', mt_rand() . microtime()), 0, 20);
     $connection->insert('orders', [
         'user_id' => $user_id, 'house_num' => $house_num, 'street_address' => $street_address,
         'city' => $city, 'pincode' => $pincode, 'email' => $email,
-        'mobile' => $mobile, 'payment_type' => $payment_type, 'payment_status' => $payment_status, 
-        'order_status' => $order_status, 'total_price' => $total_amount
+        'mobile' => $mobile, 'payment_type' => $payment_type, 'payment_status' => $payment_status,
+        'order_status' => $order_status, 'total_price' => $total_amount, 'txnid' => $txnid
     ]);
 
     $result = $connection->getResult();
-    if(gettype($result[0]) === "integer"){
+    if (gettype($result[0]) === "integer") {
         $order_id = $result[0];
-        foreach ($products as $product) {
-            $connection -> insert('order_detail',['order_id' => $order_id, 'product_id' => $product['id'],
-            'qty' => $cart_products[$product['id']]['qty'], 'price' => $product['selling_price']]);
+        foreach ($products as $product) { //i have to use batch instead loop
+            $connection->insert('order_detail', [
+                'order_id' => $order_id, 'product_id' => $product['id'],
+                'qty' => $cart_products[$product['id']]['qty'], 'price' => $product['selling_price']
+            ]);
         }
-        $is_inserted = $connection -> getResult();
-        if(gettype($is_inserted[0]) === "integer"){
+        $is_inserted = $connection->getResult();
+        if (gettype($is_inserted[0]) === "integer") {
             unset($_SESSION["cart"]);
+            if ($payment_type === "payu") {
+                $MERCHANT_KEY = "lQp5rd";
+                $SALT = "iFvJWu5r53gXIBg05swBjgZxkqksPeXJ";
+                // Merchant Key and Salt as provided by Payu.
+
+                // $PAYU_BASE_URL = "https://sandboxsecure.payu.in";    // For Sandbox Mode
+                $PAYU_BASE_URL = "https://secure.payu.in";			// For Production Mode
+
+                $action = '';
+                $posted = array();
+                $posted['key'] = $MERCHANT_KEY;
+                $posted['amount'] = $total_amount;
+                $posted['firstname'] = $user_id;
+                $posted['email'] = $email;
+                $posted['phone'] =  $mobile;
+                $posted['productinfo'] = "productinfo";
+                $posted['surl'] = 'http://127.0.0.1/ecommerce/success.php';
+                $posted['furl'] = 'http://127.0.0.1/ecommerce/failure.php';
+                $posted['txnid'] = $txnid;
+                $formError = 0;
+                $hash = '';
+                // Hash Sequence
+                $hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10";
+                if (empty($posted['hash']) && sizeof($posted) > 0) {
+                    if (
+                        empty($posted['key'])
+                        || empty($posted['txnid'])
+                        || empty($posted['amount'])
+                        || empty($posted['firstname'])
+                        || empty($posted['email'])
+                        || empty($posted['phone'])
+                        || empty($posted['productinfo'])
+                        
+                    ) {
+                        $formError = 1;
+                        ?>
+                        <script>
+                            alert(<?php echo "Error" ?>);
+                         </script>
+                        <?php
+                    } else {
+                        //$posted['productinfo'] = json_encode(json_decode('[{"name":"tutionfee","description":"","value":"500","isRequired":"false"},{"name":"developmentfee","description":"monthly tution fee","value":"1500","isRequired":"false"}]'));
+                        $hashVarsSeq = explode('|', $hashSequence);
+                        $hash_string = '';
+                        foreach ($hashVarsSeq as $hash_var) {
+                            $hash_string .= isset($posted[$hash_var]) ? $posted[$hash_var] : '';
+                            $hash_string .= '|';
+                        }
+                        $hash_string .= $SALT;
+                        $hash = strtolower(hash('sha512', $hash_string));                        
+                        $action = $PAYU_BASE_URL . '/_payment';
+                    }
+                } else if (!empty($posted['hash'])) {
+                    $hash = $posted['hash'];
+                    $action = $PAYU_BASE_URL . '/_payment';
+                }
+                ?>
+                <script>
+                    alert(<?php echo $posted['txnid']; ?>);
+                </script>
+                <form action="<?php echo $action; ?>" method="post" name="payuForm" id="payuForm">
+                    <input disable type="hidden" name="key" value="<?php echo $MERCHANT_KEY ?>" />
+                    <input disable type="hidden" name="hash" value="<?php echo $hash ?>" />
+                    <input disable type="hidden" name="txnid" value="<?php echo (empty($posted['txnid'])) ? '' : $posted['txnid'] ?>" />
+                    <input disable name="amount" value="<?php echo (empty($posted['amount'])) ? '' : $posted['amount'] ?>" />
+                    <input disable name="firstname" id="firstname" value="<?php echo (empty($posted['firstname'])) ? '' : $posted['firstname']; ?>" />
+                    <input disable name="email" id="email" value="<?php echo (empty($posted['email'])) ? '' : $posted['email']; ?>" />
+                    <input disable name="phone" value="<?php echo (empty($posted['phone'])) ? '' : $posted['phone']; ?>" />
+                    <textarea disable name="productinfo"><?php echo (empty($posted['productinfo'])) ? '' : $posted['productinfo'] ?></textarea>
+                    <input disable name="surl" value="<?php echo (empty($posted['surl'])) ? '' : $posted['surl'] ?>" size="64" />
+                    <input disable name="furl" value="<?php echo (empty($posted['furl'])) ? '' : $posted['furl'] ?>" size="64" />
+                    <!-- <input disable type="hidden" name="service_provider" value="payu_paisa" size="64" /> -->
+                    <input disable type="submit" value="Submit" style="display:none" />
+                </form>
+                <script>
+                    document.getElementById("payuForm").submit();
+                </script>
+            <?php
+            } else {
             ?>
                 <script>
                     location.href = 'thankyou.php';
                 </script>
             <?php
-        }else{
-            echo "Error - ".$result[0];
+            }
+        } else {
+            echo "Error - " . $result[0];
         }
-    }else{
-        echo "Error - ".$result[0];   
+    } else {
+        echo "Error - " . $result[0];
     }
 }
 ?>
