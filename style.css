@@ -3600,3 +3600,21 @@ ul.htc__instagram__posts.owl-carousel li img {
     justify-content: center;
     align-items: center;
 }
+
+.htc__wishlist{
+background: #c43b68;
+border-radius: 100%;
+color: #fff;
+font-size: 9px;
+height: 17px;
+line-height: 19px;
+position: absolute;
+right: -5px;
+text-align: center;
+top: -4px;
+width: 17px;
+}
+
+.mr-20{
+    margin-right: 20px;
+}

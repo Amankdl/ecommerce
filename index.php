@@ -92,9 +92,8 @@ if (count($new_arrivals) == 0) {
                                     </div>
                                     <div class="fr__hover__info">
                                         <ul class="product__action">
-                                            <li><a href="wishlist.html"><i class="icon-heart icons"></i></a></li>
-                                            <li><a href="cart.html"><i class="icon-handbag icons"></i></a></li>
-                                            <li><a href="#"><i class="icon-shuffle icons"></i></a></li>
+                                            <li><a href="javascript:void(0)" onclick="manage_wishlist('. $new_arrival['id'] .',\'add\')"><i class="icon-heart icons"></i></a></li>
+                                            <li><a href="javascript:void(0)" onclick="manage_cart('. $new_arrival['id'] .',\'add\')"><i class="icon-handbag icons"></i></a></li>
                                         </ul>
                                     </div>
                                     <div class="fr__product__inner">

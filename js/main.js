@@ -513,6 +513,9 @@ function manage_cart(pid,type) {
         console.log(qty);
     }else{
         var qty = jQuery("#qty").val();
+        if(qty == null || qty == ''){
+            qty = 1;
+        }
     }
     jQuery.ajax({
         url: 'manage_cart.php',
@@ -523,6 +526,28 @@ function manage_cart(pid,type) {
                 location.reload();
             }            
             jQuery('.htc__qua').html(result);
+        }
+    });
+}
+
+function manage_wishlist(pid,type) {    
+    jQuery.ajax({
+        url: 'manage_wishlist.php',
+        type: 'post',
+        data: 'pid=' + pid + '&type=' + type,
+        success: function (result) {
+
+            if(result === "needs login"){
+                window.location.href = 'login.php';
+            }
+
+            if(type == "delete"){
+                window.location.reload();                
+            }
+
+            if(!isNaN(result)){
+                jQuery('.htc__wishlist').html(result);
+            }
         }
     });
 }

@@ -16,6 +16,14 @@ if (count($result) == 0) {
     $_SESSION['USER_ID'] = $result[0]['id'];
     $_SESSION['USER_NAME'] = $result[0]['name'];
     $_SESSION['USER_EMAIL'] = $result[0]['email'];
+
+    if(isset($_SESSION['WISHLIST_PRODUCT'])){
+        $pid = $_SESSION['WISHLIST_PRODUCT'];
+        $user_id = $_SESSION['USER_EMAIL'];
+        $connection->insert("wishlist", ['pid' => $pid, 'user_id' => $user_id]);
+        unset($_SESSION['WISHLIST_PRODUCT']);
+    }
+
     echo "loggedin";
 }
 ?>

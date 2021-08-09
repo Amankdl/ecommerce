@@ -8,7 +8,7 @@ if(!isset($_SESSION['USER_LOGGEDIN'])){
     <?php
 }else{
     $user_id = $_SESSION['USER_ID'];    
-    $connection -> get("select o.*, s.name as orderStatus from orders o INNER JOIN order_status s where o.user_id = $user_id and o.order_status = s.id");
+    $connection -> get("select o.*, s.name as orderStatus from orders o INNER JOIN order_status s where o.user_id = $user_id and o.order_status = s.id ORDER BY added_on desc");
     $products = $connection -> getResult();
 }
 ?>
