@@ -1,6 +1,5 @@
 <?php
 include 'header.php';
-include 'functions.php';
 ?>
 
 <div class="body__overlay"></div>

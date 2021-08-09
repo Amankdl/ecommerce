@@ -20,6 +20,7 @@ if (isset($_GET['id'])) {
     $mrp = $product['mrp'];
     $selling_price = $product['selling_price'];
     $qty = $product['qty'];
+    $bestseller = $product['bestseller'];
     $short_desc = $product['short_desc'];
     $description = $product['description'];
     $meta_title = $product['meta_title'];
@@ -34,6 +35,7 @@ if(isset($_POST['submit'])){
     $mrp = $_POST['mrp'];
     $selling_price = $_POST['selling_price'];
     $qty = $_POST['qty'];
+    $bestseller = $_POST['bestseller'];
     $short_desc = $_POST['short_desc'];
     $description = $_POST['description'];
     $meta_title = $_POST['meta_title'];
@@ -46,14 +48,14 @@ if(isset($_POST['submit'])){
         $colums = [
             "category_id" => $category_id, "product_name" => $product_name,
             "mrp" => $mrp, "image"=>  $image,
-            "selling_price" => $selling_price, "qty" => $qty, "short_desc" => $short_desc, "description" => $description,
+            "selling_price" => $selling_price, "qty" => $qty, "bestseller" => $bestseller, "short_desc" => $short_desc, "description" => $description,
             "status" => 1, "meta_title" => $meta_title, "meta_desc" => $meta_desc, "meta_keyword" => $meta_keyword
         ];
     }else{
         $colums = [
             "category_id" => $category_id, "product_name" => $product_name,
             "mrp" => $mrp,
-            "selling_price" => $selling_price, "qty" => $qty, "short_desc" => $short_desc, "description" => $description,
+            "selling_price" => $selling_price, "qty" => $qty, "bestseller" => $bestseller, "short_desc" => $short_desc, "description" => $description,
             "status" => 1, "meta_title" => $meta_title, "meta_desc" => $meta_desc, "meta_keyword" => $meta_keyword
         ];
     }
@@ -113,6 +115,14 @@ $categories = $connection->getResult();
                             <div class="form-group">
                                 <label for="qty" class=" form-control-label">Quantity</label>
                                 <input required type="text" value="<?php echo $qty ?>" name="qty" placeholder="Enter Quantity" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bestseller" class=" form-control-label">Bestseller</label>
+                                <select name="bestseller" id="bestseller" class="form-control">
+                                    <option <?php echo $bestseller == 1 ? "selected" : "" ?> value="1">Yes</option>
+                                    <option <?php echo $bestseller == 0 ? "selected" : "" ?> value="0">No</option>
+                                </select>
                             </div>
 
                             <div class="form-group">

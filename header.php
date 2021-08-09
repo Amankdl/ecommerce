@@ -1,6 +1,7 @@
 <?php
 include 'database.php';
 include 'constants.php';
+include 'functions.php';
 session_start();
 $connection = new Database();
 $connection->select("categories", "id,category", "status=1", null, "category asc", null, 8);
@@ -18,6 +19,26 @@ if (isset($_SESSION['USER_LOGGEDIN'])) {
     $wishlist_count = $connection->getResult();
     $wishlist_count = $wishlist_count[0]['COUNT(id)'];
 }
+
+$script_name = $_SERVER['SCRIPT_NAME'];
+$page = explode('/',$script_name);
+$page = $page[count($page) - 1];
+
+if($page === "product.php" && isset($_GET['id'])){
+    $id = get_safe_senatize_value($_GET['id']);
+    if(!is_numeric($id)){
+        ?>
+        <script>
+         window.location.href = "index.php";
+        </script>
+        <?php
+    }
+    $connection->get("select * from product p INNER JOIN categories c on p.category_id = c.id where c.status = 1 AND p.status = 1 AND p.id = $id");
+    $product = $connection -> getResult()[0];
+    $meta_title = $product['meta_title'];
+    $meta_desc = $product['meta_desc'];
+    $meta_keyword = $product['meta_keyword'];
+}
 ?>
 
 <!doctype html>
@@ -26,8 +47,9 @@ if (isset($_SESSION['USER_LOGGEDIN'])) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>My eCommerce</title>
-    <meta name="description" content="">
+    <title><?php echo (empty($meta_title)) ? '' : $meta_title ?></title>
+    <meta name="description" content="<?php echo (empty($meta_desc)) ? '' : $meta_desc ?>">
+    <meta name="keywords" content="<?php echo (empty($meta_keyword)) ? '' : $meta_keyword ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Place favicon.ico in the root directory -->

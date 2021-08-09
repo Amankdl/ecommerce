@@ -12,19 +12,20 @@ if (isset($_POST['submit'])) {
     $mrp = get_safe_senatize_value($_POST['mrp']);
     $selling_price = get_safe_senatize_value($_POST['selling_price']);
     $qty = get_safe_senatize_value($_POST['qty']);
+    $bestseller = get_safe_senatize_value($_POST['bestseller']);
     $short_desc = get_safe_senatize_value($_POST['short_desc']);
     $description = get_safe_senatize_value($_POST['description']);
     $meta_title = get_safe_senatize_value($_POST['meta_title']);
     $meta_desc = get_safe_senatize_value($_POST['meta_desc']);
     $meta_keyword = get_safe_senatize_value($_POST['meta_keyword']);
 
-    $image = rand(111111111,9999999999).'_'.$_FILES['image']['name'];
-    move_uploaded_file($_FILES['image']['tmp_name'],PRODUCT_IMAGE_SERVER_PATH.$image);
+    $image = rand(111111111, 9999999999) . '_' . $_FILES['image']['name'];
+    move_uploaded_file($_FILES['image']['tmp_name'], PRODUCT_IMAGE_SERVER_PATH . $image);
 
     $connection->insert("product", [
         "category_id" => $category_id, "product_name" => $product_name,
-        "mrp" => $mrp, "image"=>  $image,
-        "selling_price" => $selling_price, "qty" => $qty, "short_desc" => $short_desc, "description" => $description,
+        "mrp" => $mrp, "image" =>  $image,
+        "selling_price" => $selling_price, "qty" => $qty, "bestseller" => $bestseller, "short_desc" => $short_desc, "description" => $description,
         "status" => 1, "meta_title" => $meta_title, "meta_desc" => $meta_desc, "meta_keyword" => $meta_keyword
     ]);
     $result = $connection->getResult()[0];
@@ -78,6 +79,14 @@ $categories = $connection->getResult();
                             <div class="form-group">
                                 <label for="qty" class=" form-control-label">Quantity</label>
                                 <input required type="text" name="qty" placeholder="Enter Quantity" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="qty" class=" form-control-label">Bestseller</label>
+                                <select name="bestseller" id="bestseller" class="form-control">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
                             </div>
 
                             <div class="form-group">

@@ -1,6 +1,5 @@
 <?php
 include 'header.php';
-include 'functions.php';
 if(isset($_GET['id'])){
 $msg = "";
 $connection = new Database();

@@ -1,20 +1,5 @@
 <?php
 include 'header.php';
-include 'functions.php';
-if(isset($_GET['id'])){
-$msg = "";
-$connection = new Database();
-$id = get_safe_senatize_value($_GET['id']);
-if(!is_numeric($id)){
-    ?>
-    <script>
-    window.location.href = "index.php";
-    </script>
-    <?php
-}
-$connection->get("select * from product p INNER JOIN categories c on p.category_id = c.id where c.status = 1 AND p.status = 1 AND p.id = $id");
-$product = $connection->getResult()[0];
-}
 ?>
 
 <div class="body__overlay"></div>

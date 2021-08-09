@@ -1,6 +1,5 @@
 <?php
 include 'header.php';
-include 'functions.php';
 if (isset($_GET['keyword'])) {
     $msg = "";
     $keyword = get_safe_senatize_value($_GET['keyword']);    
