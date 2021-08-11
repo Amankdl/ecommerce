@@ -11,6 +11,7 @@ class Database
     public $conn = false;
     public $mysqli = "";
     public $result = array();
+    public $count = 0;
 
     public function __construct()
     {
@@ -61,6 +62,13 @@ class Database
     {
         $val = $this->result;
         $this->result = array();
+        return $val;
+    }
+
+    public function getCount()
+    {
+        $val = $this->count;
+        $this->count = 0;
         return $val;
     }
 
@@ -161,7 +169,9 @@ class Database
     public function get($sql)
     {
         if ($query = $this->mysqli->query($sql)) {
-            $this->result = $query->fetch_all(MYSQLI_ASSOC);
+            $data = $query-> fetch_all(MYSQLI_ASSOC);
+            $this->result =  $data;
+            $this -> count = count($data);
             return true;
         } else {
             array_push($this->result, $this->mysqli->error);

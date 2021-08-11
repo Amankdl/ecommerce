@@ -551,3 +551,62 @@ function manage_wishlist(pid,type) {
         }
     });
 }
+
+function verify_email(){
+    var email = jQuery('#email').val().trim();
+    if(email == null || email == ''){
+        jQuery('#email_error').show();
+        jQuery('#email_error').html('Please enter email properly.');
+    }else{
+        jQuery('#email_error').hide();
+        jQuery('#verify_email_btn').html('Sending otp...');
+        jQuery('#verify_email_btn').attr('disabled', 'disabled');
+        jQuery.ajax({
+            url: 'send_otp.php',
+            type: 'post',
+            data: 'email=' + email + '&type=' + 'email',
+            success: function (result) {    
+                if(result === "done"){
+                    jQuery('#email_otp_box').show();
+                    jQuery('#email').attr('disabled','disabled');
+                    jQuery('#verify_email_btn').hide();
+                    jQuery('#email_error').show();
+                    jQuery('#email_error').html('Please enter the otp you recieved on <strong>'+email+' </strong>');
+                }else if(result == "not_done"){
+                    jQuery('#email_error').html('Please try after sometime');
+                }
+            }
+        });
+    }
+}
+
+function verify_otp(){
+    var otp = jQuery('#otp_box').val().trim();
+    if(otp == null || otp == ''){
+        jQuery('#email_error').html('No otp entered.');
+    }else{
+        jQuery('#email_error').hide();
+        jQuery('#verify_otp_btn').attr('disabled', 'disabled');
+        jQuery('#verify_otp_btn').html('Verifying...');
+        jQuery.ajax({
+            url: 'verify_otp.php',
+            type: 'post',
+            data: 'otp=' + otp + '&type=' + 'email',
+            success: function (result) {  
+                jQuery('#email_error').show();
+                if(result == "verified"){
+                    jQuery('#email_otp_box').hide();
+                    jQuery('#verify_email_btn').hide();
+                    jQuery('#email_error').attr('style', 'color: green');
+                    jQuery('#email_error').html('<strong>'+jQuery('#email').val().trim()+' </strong> verified successfully.');
+                }else if(result == "not_verified"){
+                    jQuery('#verify_otp_btn').html('Verify OTP');
+                    jQuery('#verify_otp_btn').prop("disabled", false);
+                    jQuery('#email_error').html('Invalid OTP entered.');
+                }else{
+                    alert(result);
+                }
+            }
+        });
+    }
+}

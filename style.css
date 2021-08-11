@@ -3618,3 +3618,19 @@ width: 17px;
 .mr-20{
     margin-right: 20px;
 }
+
+.mt-5px{
+    margin-top: 5px;
+}
+
+#email_otp_box{
+    display: none;
+}
+
+#email_error{
+    display: none;
+}
+
+.danger{
+    color: red;
+}

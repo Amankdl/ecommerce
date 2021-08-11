@@ -73,9 +73,15 @@ include 'header.php';
 										</div>
 									</div>
 									<div class="single-contact-form">
-										<div class="contact-box name">
-											<input type="text" required name="email" id="email" placeholder="Your Email*" style="width:100%">
+										<div class="contact-box" id="email_div">
+											<input type="text" required name="email" id="email" placeholder="Your Email*">
+											<button type="button" class="fv-btn mt-5px" id="verify_email_btn" onclick="verify_email()">Verify Email</button>
 										</div>
+										<div class="contact-box" id="email_otp_box">
+											<input type="text" required name="email" id="otp_box" placeholder="Please enter OTP">
+											<button type="button" class="fv-btn mt-5px" id="verify_otp_btn" onclick="verify_otp()">Verify OTP</button>
+										</div>
+										<p id="email_error" class="danger"></p>
 									</div>
 									<div class="single-contact-form">
 										<div class="contact-box name">
